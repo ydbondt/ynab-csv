@@ -11,7 +11,8 @@ numberfy = (val) ->
     # check for negative signs or parenthases.
     is_negative = if (val.match("-") || val.match(/\(.*\)/)) then -1 else 1
     # remove any commas
-    val = val.replace(/,/g, "")
+    val = val.replace(/\./g,"#").replace(/,/g, ".").replace(/#/g, "")
+    console.log "result:" + val
     # return just the number and make it negative if needed.
     +(val.match(/\d+.?\d*/)[0]) * is_negative
   else
@@ -54,6 +55,8 @@ class window.DataObject
             # Some YNAB columns need special formatting,
             #   the rest are just returned as they are.
             switch col
+              when 'Memo'
+                tmp_row[col] = cell.replace(/,/g,".") if cell
               when 'Outflow'
                 number = numberfy(cell)
                 if lookup['Outflow'] == lookup['Inflow']
